@@ -1,0 +1,21 @@
+[package]
+name = "rhipster"
+version = "0.1.0"
+authors = ["Bownairo <eerokelly@gmail.com>"]
+edition = "2018"
+license = "MIT"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.41"
+convert_case = "0.4.0"
+diesel_cli_ext = { path = "../diesel_cli_ext" }
+diesel_cli = { path = "../diesel/diesel_cli", default-features = false, features = ["postgres"] }
+include_dir = "0.6.1"
+proc-macro2 = "1.0.27"
+quote = "1.0.9"
+scan_dir = "0.3.3"
+sourcegen-cli = "0.4.0"
+syn = "1.0.73"
+toml = "0.5.8"

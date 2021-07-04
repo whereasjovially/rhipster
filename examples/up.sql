@@ -1,0 +1,12 @@
+CREATE TABLE patients (
+  id SERIAL PRIMARY KEY,
+  first VARCHAR NOT NULL,
+  last VARCHAR NOT NULL,
+  dob DATE NOT NULL
+);
+
+CREATE TABLE practitioners (
+  id SERIAL PRIMARY KEY,
+  first VARCHAR NOT NULL,
+  last VARCHAR NOT NULL
+);

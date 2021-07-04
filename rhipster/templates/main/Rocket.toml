@@ -1,0 +1,2 @@
+[global.databases]
+database = { url = "##DATABASE##" }
