@@ -1,5 +1,3 @@
-// Built-in Lints
-#![deny(warnings, missing_copy_implementations)]
 // Clippy lints
 #![allow(clippy::map_unwrap_or)]
 #![warn(
@@ -14,14 +12,14 @@
 )]
 #![cfg_attr(test, allow(clippy::result_unwrap_used))]
 
-mod config;
+pub mod config;
 
 mod database_error;
 #[macro_use]
-mod database;
+pub mod database;
 mod cli;
 mod infer_schema_internals;
-mod print_schema;
+pub mod print_schema;
 #[cfg(any(feature = "postgres", feature = "mysql"))]
 mod query_helper;
 mod validators;
@@ -31,7 +29,8 @@ use clap::{ArgMatches, Shell};
 use diesel::backend::Backend;
 use diesel::migration::MigrationSource;
 use diesel::Connection;
-use diesel_migrations::{FileBasedMigrations, HarnessWithOutput, MigrationError, MigrationHarness};
+pub use diesel_migrations::FileBasedMigrations;
+use diesel_migrations::{HarnessWithOutput, MigrationError, MigrationHarness};
 use regex::Regex;
 use std::any::Any;
 use std::collections::{HashMap, HashSet};
@@ -195,7 +194,7 @@ fn migrations_dir_from_cli(matches: &ArgMatches) -> Option<PathBuf> {
         })
 }
 
-fn run_migrations_with_output<Conn, DB>(
+pub fn run_migrations_with_output<Conn, DB>(
     conn: &mut Conn,
     migrations: FileBasedMigrations,
 ) -> Result<(), Box<dyn Error + Send + Sync + 'static>>
@@ -389,7 +388,7 @@ fn create_migrations_directory(path: &Path) -> DatabaseResult<PathBuf> {
     Ok(path.to_owned())
 }
 
-fn find_project_root() -> DatabaseResult<PathBuf> {
+pub fn find_project_root() -> DatabaseResult<PathBuf> {
     let current_dir = env::current_dir()?;
     search_for_directory_containing_file(&current_dir, "diesel.toml")
         .or_else(|_| search_for_directory_containing_file(&current_dir, "Cargo.toml"))

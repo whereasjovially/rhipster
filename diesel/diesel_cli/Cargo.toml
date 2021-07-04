@@ -18,6 +18,10 @@ name = "diesel"
 path = "src/main.rs"
 doc = false
 
+[lib]
+path = "src/main.rs"
+doc = false
+
 [dependencies]
 chrono = { version = "0.4.19", default-features = false, features = ["clock", "std"] }
 clap = "2.27"

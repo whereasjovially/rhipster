@@ -121,6 +121,7 @@ impl InferConnection {
     }
 }
 
+#[macro_export]
 macro_rules! call_with_conn {
     (
         $database_url:expr,
@@ -133,15 +134,15 @@ macro_rules! call_with_conn {
         $database_url:expr,
         $($func:ident)::+ ($($args:expr),*)
     ) => {
-        match crate::database::InferConnection::establish(&$database_url)
-            .unwrap_or_else(|err| {crate::database::handle_error_with_database_url(&$database_url, err)})
+        match $crate::database::InferConnection::establish(&$database_url)
+            .unwrap_or_else(|err| {$crate::database::handle_error_with_database_url(&$database_url, err)})
         {
-            #[cfg(feature="postgres")]
-            crate::database::InferConnection::Pg(ref mut conn) => $($func)::+ (conn, $($args),*),
-            #[cfg(feature="sqlite")]
-            crate::database::InferConnection::Sqlite(ref mut conn) => $($func)::+ (conn, $($args),*),
-            #[cfg(feature="mysql")]
-            crate::database::InferConnection::Mysql(ref mut conn) => $($func)::+ (conn, $($args),*),
+            // #[cfg(feature="postgres")]
+            $crate::database::InferConnection::Pg(ref mut conn) => $($func)::+ (conn, $($args),*),
+            // #[cfg(feature="sqlite")]
+            // $crate::database::InferConnection::Sqlite(ref mut conn) => $($func)::+ (conn, $($args),*),
+            // #[cfg(feature="mysql")]
+            // $crate::database::InferConnection::Mysql(ref mut conn) => $($func)::+ (conn, $($args),*),
         }
     };
 }

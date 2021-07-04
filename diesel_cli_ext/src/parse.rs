@@ -5,6 +5,7 @@ pub struct ParseOutput {
     pub str_proto: String,
     pub str_request: String,
     pub str_rpc: String,
+    pub model_list: Vec<String>,
     pub str_model: String,
     pub str_from_proto: String,
     pub str_into_proto: String,
@@ -23,9 +24,11 @@ pub fn parse(
     model_derives: Option<String>,
     add_table_name: bool,
     model_type_mapping: &mut HashMap<String, String>,
+    new: bool
 ) -> ParseOutput {
     //Parse
     let mut str_model: String = "".to_string();
+    let mut model_list: Vec<String> = Vec::new();
     let mut str_proto: String = "".to_string();
     let mut str_from_proto: String = "".to_string();
     let mut str_into_proto: String = "".to_string();
@@ -188,6 +191,7 @@ pub fn parse(
                 }
             }
 
+            model_list.push(vec[4 + indent_depth].to_string());
             if add_table_name {
                 // add #[table_name = "name"]
                 str_model.push_str(&format!(
@@ -197,9 +201,15 @@ pub fn parse(
                 ));
             }
 
+            let prefix = if new {
+                "New"
+            } else {
+                ""
+            };
             str_model.push_str(&format!(
-                "{}pub struct {} {{\n",
+                "{}pub struct {}{} {{\n",
                 " ".repeat(indent_depth),
+                prefix,
                 struct_name
             ));
             str_proto.push_str(&format!("message {} {{\n", struct_name));
@@ -228,6 +238,10 @@ pub fn parse(
                 struct_name
             ));
         } else if cmp.contains("->") {
+            if new && vec[8 + indent_depth] == "id" {
+                continue;
+            }
+
             let _type = vec[10 + indent_depth].replace(",", "");
 
             let dict = match action {
@@ -359,6 +373,7 @@ pub fn parse(
         str_proto,
         str_request,
         str_rpc,
+        model_list,
         str_model,
         str_from_proto,
         str_into_proto,

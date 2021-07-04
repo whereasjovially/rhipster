@@ -42,7 +42,7 @@ impl Config {
         }
     }
 
-    fn set_relative_path_base(&mut self, base: &Path) {
+    pub fn set_relative_path_base(&mut self, base: &Path) {
         self.print_schema.set_relative_path_base(base);
         if let Some(ref mut migration) = self.migrations_directory {
             migration.set_relative_path_base(base);

@@ -6,7 +6,7 @@ use std::io::prelude::*;
 use std::path::Path;
 use toml::Value;
 
-mod parse;
+pub mod parse;
 
 /// Derive a formatted message from a set of options.
 pub fn custom_opts_usage(iopts: Options, brief: &str) -> String {
@@ -22,29 +22,31 @@ pub fn custom_opts_usage(iopts: Options, brief: &str) -> String {
     })
 }
 
-fn print_normal_dependencies(parse_output: &parse::ParseOutput) {
+pub fn print_normal_dependencies(parse_output: &parse::ParseOutput, mut output: String) -> String {
     if parse_output.type_nd {
-        println!("use chrono::NaiveDate;");
+        output += "use chrono::NaiveDate;";
     }
     if parse_output.type_ndt {
-        println!("use chrono::NaiveDateTime;");
+        output += "use chrono::NaiveDateTime;";
     }
     if parse_output.type_nt {
-        println!("use chrono::NaiveTime;");
+        output += "use chrono::NaiveTime;";
     }
     if parse_output.type_bd {
-        println!("use bigdecimal::BigDecimal;");
+        output += "use bigdecimal::BigDecimal;";
     }
     if parse_output.type_ip {
-        println!("use ipnetwork::IpNetwork;");
+        output += "use ipnetwork::IpNetwork;";
     }
     if parse_output.type_uuid {
-        println!("use uuid::Uuid;");
+        output += "use uuid::Uuid;";
     }
     if parse_output.type_tz {
-        println!("use chrono::DateTime;");
-        println!("use chrono::offset::Utc;");
+        output += "use chrono::DateTime;";
+        output += "use chrono::offset::Utc;";
     }
+
+    output
 }
 fn print_conversion_dependencies() {
     //todo add selection for ndt and bd
@@ -197,6 +199,7 @@ fn main() {
         derive,
         matches.opt_present("t"),
         &mut type_mapping,
+        false,
     );
 
     //imported types
@@ -222,7 +225,7 @@ fn main() {
             println!("#![allow(clippy::all)]\n");
 
             println!("{}", import_type_string);
-            print_normal_dependencies(&parse_output);
+            // print_normal_dependencies(&parse_output);
             println!("{}", parse_output.str_model);
         }
         "from_proto" => {

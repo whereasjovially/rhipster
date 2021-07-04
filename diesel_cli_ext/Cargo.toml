@@ -15,6 +15,9 @@ edition = "2018"
 name = "diesel_ext"
 path = "src/main.rs"
 
+[lib]
+path = "src/main.rs"
+
 [dependencies]
 getopts = "0.2"
 toml = "0.5.5"
